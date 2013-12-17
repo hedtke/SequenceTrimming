@@ -41,30 +41,30 @@ right border, the width, the number of selected rows and the area of the biggest
 
 ## USAGE
 ### trimZeroOne
-| parameter     | type   | required | description                                                                                |
-| ------------- | ------ | -------- | ------------------------------------------------------------------------------------------ |
-| `--infile`    | string | yes      | file name of input file                                                                    |
-| `--outfile`   | string | no       | file name of output file (CSV format), if skipped, only a short summary on screen is given |
-| `--rows`      | int    | yes      | number of rows in the input file                                                           |
-| `--length`    | int    | yes      | length of each row in the input file                                                       |
-| `--fastq`     |        | no       | is input file in FASTQ format?                                                             |
-| `--threshold` | int    | no\*     | quality scores less than the threshold are "bad", others are "good"                        |
-| `--shift`     | int    | no\*     | which ASCII index represents the "0" quality?                                              |
+| parameter     | short | type   | required | description                                                                                |
+| ------------- | ----- | ------ | -------- | ------------------------------------------------------------------------------------------ |
+| `--infile`    | `-i`  | string | yes      | file name of input file                                                                    |
+| `--outfile`   | `-o`  | string | no       | file name of output file (CSV format), if skipped, only a short summary on screen is given |
+| `--rows`      | `-r`  | int    | yes      | number of rows in the input file                                                           |
+| `--length`    | `-l`  | int    | yes      | length of each row in the input file                                                       |
+| `--fastq`     | `-f`  |        | no       | is input file in FASTQ format?                                                             |
+| `--threshold` | `-t`  | int    | no\*     | quality scores less than the threshold are "bad", others are "good"                        |
+| `--shift`     | `-s`  | int    | no\*     | which ASCII index represents the "0" quality?                                              |
 
 \*: You can only use `--shift` and `--threshold` together. It is only allowed to use
 non of them or both. If `--fastq` is used, you have to use `--shift` and `–threshold`.
 
 ### trimZeroOneZerosAllowed
-| parameter     | type   | required | description                                                                                |
-| ------------- | ------ | -------- | ------------------------------------------------------------------------------------------ |
-| `--infile`    | string | yes      | file name of input file                                                                    |
-| `--outfile`   | string | no       | file name of output file (CSV format), if skipped, only a short summary on screen is given |
-| `--rows`      | int    | yes      | number of rows in the input file                                                           |
-| `--length`    | int    | yes      | length of each row in the input file                                                       |
-| `--zeros`     | int    | yes      | number of allowed zeros per row                                                            |
-| `--fastq`     |        | no       | is input file in FASTQ format?                                                             |
-| `--threshold` | int    | no\*     | quality scores less than the threshold are "bad", others are "good"                        |
-| `--shift`     | int    | no\*     | which ASCII index represents the "0" quality?                                              |
+| parameter     | short | type   | required | description                                                                                |
+| ------------- | ----- | ------ | -------- | ------------------------------------------------------------------------------------------ |
+| `--infile`    | `-i`  | string | yes      | file name of input file                                                                    |
+| `--outfile`   | `-o`  | string | no       | file name of output file (CSV format), if skipped, only a short summary on screen is given |
+| `--rows`      | `-r`  | int    | yes      | number of rows in the input file                                                           |
+| `--length`    | `-l`  | int    | yes      | length of each row in the input file                                                       |
+| `--zeros`     | `-z`  | int    | yes      | number of allowed zeros per row                                                            |
+| `--fastq`     | `-f`  |        | no       | is input file in FASTQ format?                                                             |
+| `--threshold` | `-t`  | int    | no\*     | quality scores less than the threshold are "bad", others are "good"                        |
+| `--shift`     | `-s`  | int    | no\*     | which ASCII index represents the "0" quality?                                              |
 
 \*: You can only use `--shift` and `--threshold` together. It is only allowed to use
 non of them or both. If `--fastq` is used, you have to use `--shift` and `–threshold`.
