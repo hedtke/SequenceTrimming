@@ -20,8 +20,8 @@ c++ -I. -O3 trimZeroOneZerosAllowed.cpp -o trimZeroOneZerosAllowed
 ## INPUT FORMAT
 If the input file is a FASTQ file, use the switch `--fastq` and give a shift for
 the ASCII-Char -> Integer tranformation. Use the threshold to say what qualities
-are "good" and "bad": Let $$$t$$$ be the threshold, $$$s$$$ be the shift, $$$c$$$ a char ASCII
-score and $$$I(c)$$$ the ASCII index of $$$c$$$. We say that $$$c$$$ is "bad" (a "0") if $$$I(c)-s<t$$$.
+are "good" and "bad": Let *t* be the threshold, *s* be the shift, *c* a char ASCII
+score and *I(c)* the ASCII index of *c*. We say that *c* is "bad" (a "0") if *I(c)-s<t*.
 Otherwise it is good ("1").
 
 If the input file consists only of the quality score lines of a FASTQ files do
@@ -48,10 +48,10 @@ right border, the width, the number of selected rows and the area of the biggest
 | `--rows`      | int    | yes      | number of rows in the input file |
 | `--length`    | int    | yes      | length of each row in the input file |
 | `--fastq`     |        | no       | is input file in FASTQ format? |
-| `--threshold` | int    | no[^1]   | quality scores less than the threshold are "bad", others are "good" |
-| `--shift`     | int    | no[^1]   | which ASCII index represents the "0" quality? |
+| `--threshold` | int    | no\*   | quality scores less than the threshold are "bad", others are "good" |
+| `--shift`     | int    | no\*   | which ASCII index represents the "0" quality? |
 
-[^1]: You can only use `--shift` and `--threshold` together. It is only allowed to use
+\*: You can only use `--shift` and `--threshold` together. It is only allowed to use
 non of them or both. If `--fastq` is used, you have to use `--shift` and `–threshold`.
 
 ### trimZeroOneZerosAllowed
@@ -63,8 +63,8 @@ non of them or both. If `--fastq` is used, you have to use `--shift` and `–thr
 | `--length`    | int    | yes      | length of each row in the input file |
 | `--zeros`     | int    | yes      | number of allowed zeros per row |
 | `--fastq`     |        | no       | is input file in FASTQ format? |
-| `--threshold` | int    | no[^1]   | quality scores less than the threshold are "bad", others are "good" |
-| `--shift`     | int    | no[^1]   | which ASCII index represents the "0" quality? |
+| `--threshold` | int    | no\*   | quality scores less than the threshold are "bad", others are "good" |
+| `--shift`     | int    | no\*   | which ASCII index represents the "0" quality? |
 
-[^1]: You can only use `--shift` and `--threshold` together. It is only allowed to use
+\*: You can only use `--shift` and `--threshold` together. It is only allowed to use
 non of them or both. If `--fastq` is used, you have to use `--shift` and `–threshold`.
