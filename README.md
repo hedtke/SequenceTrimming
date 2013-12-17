@@ -1,4 +1,4 @@
-# README: Sequence Trimming Algorithms
+# Sequence Trimming Algorithms
 Ivo Grosse, Ivo Hedtke, Ioana Lemnian, Matthias Mueller-Hannemann.  
 *17 Dec 2013*.
 
@@ -10,7 +10,7 @@ Ivo Grosse, Ivo Hedtke, Ioana Lemnian, Matthias Mueller-Hannemann.
 | Results.h | Export output file |
 | tclap/\* | Parsing command line arguments |
 | trimZeroOne.cpp | Problem 0-zeros |
-| trimZeroOneZerosAllowed.cpp | Problem z-zeros |
+| trimZeroOneZerosAllowed.cpp | Problem *z*-zeros |
 
 ## COMPILE
 ```
