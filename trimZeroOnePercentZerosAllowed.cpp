@@ -1,12 +1,12 @@
 /*******************************************************************************
  *
- * trimZeroOneZerosAllowed.cpp
+ * trimZeroOnePercentZerosAllowed.cpp
  *
  * DESCRIPTION: Given an ASCII grid of zeros and ones or a FASTQ file and a threshold.
- *              n lines. l numbers per line. Parameter k. Find two borders
+ *              n lines. l numbers per line. Parameter p. Find two borders
  *              0 <= l1 <= l2 <= l-1, such that the window on the n x l grid starting
  *              at column l1 and ending at column l2 consists only of ones (quality >=
- *              threshold) and at most k zeros per line. Here it is allowed to ignore
+ *              threshold) and at most p percent zeros per line. Here it is allowed to ignore
  *              some lines. Determine l1, l2 and the selected (not ignored) lines in
  *              such a way, that the area
  *                 (width*height = (l2 - l1 - 1) * (number of selected lines)
@@ -14,14 +14,11 @@
  *              written with the number of selected lines for all given pairs of
  *              left and right borders.
  *
- * RUNTIME: O( n*l + l^2 )
+ * RUNTIME: O( l^2*n )
  *
  * AUTHORS: Ivo Hedtke (hedtke@informatik.uni-halle.de)
- *          Matthias Mueller-Hannemann (muellerh@informatik.uni-halle.de)
  *
- * CREATED: 21 Feb 2013
- *
- * LAST CHANGE: 19 Dec 2013
+ * CREATED: 19 Dec 2013
  *
  */
 
@@ -39,10 +36,10 @@ int main(int argc, char * argv[]) {
     try{
 
         // read command line parameters
-        CmdLine cmd("trim with z allowed zeros per row", ' ', "1.0", true);
+        CmdLine cmd("trim with p percent allowed zeros per row", ' ', "1.0", true);
         ValueArg<int> rowsArg("r", "reads", "number of reads", true, 0, "integer", cmd);
         ValueArg<int> lengthArg("l", "length", "length of each read", true, 0, "integer", cmd);
-        ValueArg<int> zerosArg("z", "zeros", "number of allowed zeros per read", true, 0, "integer", cmd);
+        ValueArg<double> percentArg("p", "percent", "percent of allowed zeros per read: value between 0 and 1", true, 0.0, "double", cmd);
         ValueArg<string> infileArg ("i", "infile",  "input file name", true,  "", "string", cmd);
         ValueArg<string> outfileArg("o", "outfile", "output file name (CSV format)", false, "", "string", cmd);
         SwitchArg fastqSwitch("f", "fastq", "input file is in FASTQ format", cmd, false);
@@ -51,7 +48,7 @@ int main(int argc, char * argv[]) {
         cmd.parse( argc, argv );
         int numberOfSequences = rowsArg.getValue();
         int lengthOfSequence = lengthArg.getValue();
-        int numberOfAllowedZerosPerSequence = zerosArg.getValue();
+        double percentOfAllowedZerosPerSequence = percentArg.getValue();
         string inputFile = infileArg.getValue();
         string outputFile = outfileArg.getValue();
         bool fastq = fastqSwitch.getValue();
@@ -69,13 +66,13 @@ int main(int argc, char * argv[]) {
         }
 
         // compute matrix c_z for z-zeros
-        int** c = trimZeroOneZerosAllowed(inputFile,
-                                          numberOfSequences,
-                                          lengthOfSequence,
-                                          numberOfAllowedZerosPerSequence,
-                                          fastq,
-                                          threshold,
-                                          shift);
+        int** c = trimZeroOnePercentZerosAllowed(inputFile,
+                                                 numberOfSequences,
+                                                 lengthOfSequence,
+                                                 percentOfAllowedZerosPerSequence,
+                                                 fastq,
+                                                 threshold,
+                                                 shift);
 
         // output in CSV or on terminal
         if (outfileArg.isSet()) {

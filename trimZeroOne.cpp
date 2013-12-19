@@ -39,8 +39,8 @@ int main(int argc, const char * argv[]) {
 
         // read command line parameters
         CmdLine cmd("trim with 0 zeros per row", ' ', "1.0", true);
-        ValueArg<int> rowsArg("r", "rows", "number of sequences/rows", true, 0, "integer", cmd);
-        ValueArg<int> lengthArg("l", "length", "length of each sequence/row", true, 0, "integer", cmd);
+        ValueArg<int> rowsArg("r", "reads", "number of reads", true, 0, "integer", cmd);
+        ValueArg<int> lengthArg("l", "length", "length of each read", true, 0, "integer", cmd);
         ValueArg<string> infileArg("i", "infile", "input file name", true, "", "string", cmd);
         ValueArg<string> outfileArg("o", "outfile", "output file name (CSV format)", false, "", "string", cmd);
         SwitchArg fastqSwitch("f", "fastq", "input file is in FASTQ format", cmd, false);
@@ -57,11 +57,12 @@ int main(int argc, const char * argv[]) {
 
         // FASTQ files need a threshold
         if ( fastq && (!thresholdArg.isSet() || !shiftArg.isSet()) ){
-            cerr << "FASTQ files need a threshold and a shift" << endl;
+            cerr << "ERROR: FASTQ files need a threshold and a shift" << endl;
             return EXIT_FAILURE;
         }
         if ( thresholdArg.isSet() != shiftArg.isSet() ) {
-            cerr << "threshold and shift can only be used together, one is missing" << endl;
+            cerr << "ERROR: threshold and shift can only be used together, one is missing" << endl;
+            return EXIT_FAILURE;
         }
 
         // compute matrix c_z for z-zeros
@@ -82,7 +83,7 @@ int main(int argc, const char * argv[]) {
         free_matrix(c, lengthOfSequence);
 
     } catch (ArgException &e) {
-        cerr << "error: " << e.error() << " for arg " << e.argId() << endl;
+        cerr << "ERROR: " << e.error() << " for arg " << e.argId() << endl;
     }
 
     return EXIT_SUCCESS;

@@ -7,7 +7,7 @@
  *
  * CREATED: 13 Dec 2013
  *
- * LAST CHANGE: 16 Dec 2013
+ * LAST CHANGE: 19 Dec 2013
  *
  */
 
@@ -48,13 +48,16 @@ namespace ComputeMatrices {
     // (thresholdGoodValues >= 0) => lines of the grid are not '0' and '1' so use a threshold:
     //                               (quality < threshold)? '0' : '1'
     int** trimZeroOne(
-            const std::string& inputfile,
-            const int& numberOfSequences,
-            const int& lengthOfSequence,
-            const bool& readFASTQ,
-            const int& thresholdGoodValues,
-            const int& shiftToConvertChars)
+        const std::string& inputfile,
+        const int& numberOfSequences,
+        const int& lengthOfSequence,
+        const bool& readFASTQ,
+        const int& thresholdGoodValues,
+        const int& shiftToConvertChars)
     {
+
+        int thresholdPlusShift = thresholdGoodValues + shiftToConvertChars;
+
         // alloc and init c and cT
         // cT = counter of triangles
         // c(i,j)=m means, there are m lines where a 1-block starts at i & ends at j
@@ -79,7 +82,7 @@ namespace ComputeMatrices {
             in >> zeile;
             if (thresholdGoodValues >= 0) { // transform to 0/1
                 for (int i = 0; i < lengthOfSequence; i++) {
-                    zeile[i] = ( (zeile[i]-shiftToConvertChars)<thresholdGoodValues )? '0' : '1';
+                    zeile[i] = ( zeile[i]<thresholdPlusShift )? '0' : '1';
                 }
             }
             startOfOneBlock = 0;
@@ -131,14 +134,15 @@ namespace ComputeMatrices {
 
     // z-zeros
     int** trimZeroOneZerosAllowed(
-            const std::string& inputfile,
-            const int& numberOfSequences,
-            const int& lengthOfSequence,
-            const int& numberOfAllowedZerosPerSequence,
-            const bool& readFASTQ,
-            const int& thresholdGoodValues,
-            const int& shiftToConvertChars)
+        const std::string& inputfile,
+        const int& numberOfSequences,
+        const int& lengthOfSequence,
+        const int& numberOfAllowedZerosPerSequence,
+        const bool& readFASTQ,
+        const int& thresholdGoodValues,
+        const int& shiftToConvertChars)
     {
+        int thresholdPlusShift = thresholdGoodValues + shiftToConvertChars;
 
         // alloc and init c and cC
         // cC = counter of columns
@@ -183,7 +187,7 @@ namespace ComputeMatrices {
             in >> zeile;
             if (thresholdGoodValues >= 0) { // transform to 0/1
                 for (int i = 0; i < lengthOfSequence; i++) {
-                    zeile[i] = ( (zeile[i]-shiftToConvertChars)<thresholdGoodValues )? '0' : '1';
+                    zeile[i] = ( zeile[i]<thresholdPlusShift )? '0' : '1';
                 }
             }
             startOfOneBlock = 0;
@@ -295,4 +299,117 @@ namespace ComputeMatrices {
         return c;
     }
 
+    // p-percent
+    int** trimZeroOnePercentZerosAllowed(
+        const std::string& inputfile,
+        const int& numberOfSequences,
+        const int& lengthOfSequence,
+        const double& percentOfAllowedZerosPerSequence,
+        const bool& readFASTQ,
+        const int& thresholdGoodValues,
+        const int& shiftToConvertChars)
+    {
+        int thresholdPlusShift = thresholdGoodValues + shiftToConvertChars;
+        
+        // c(i,j)=m means, there are m lines where a block of "only ones and at most
+        //        p percent zeros" starts at i and ends at j
+        int** c = callocMatrix<int>(lengthOfSequence);
+
+        // read the file row by row
+        char* zeile = mallocVector<char>(lengthOfSequence+1);
+
+        // pre compute allowed zeros per width for given percent
+        int* preCompAllowedZeros = mallocVector<int>(lengthOfSequence+1);
+        for (int i = 0; i < lengthOfSequence; i++) {
+            preCompAllowedZeros[i] = (int) percentOfAllowedZerosPerSequence * i;
+        }
+
+        // row-block is feasible if numberOfCurrentZeros/(j-i+1) <= percentOfAllowedZerosPerSequence
+        double numberOfCurrentZeros;
+
+        // open file
+        std::ifstream in;
+        in.open(inputfile.c_str(), std::ios::in);
+
+        for (int z = 0; z < numberOfSequences; z++) {
+            if (readFASTQ) { // skip 3 lines
+                in >> zeile;
+                in >> zeile;
+                in >> zeile;
+            }
+            in >> zeile;
+            if (thresholdGoodValues >= 0) { // transform to 0/1
+                for (int i = 0; i < lengthOfSequence; i++) {
+                    zeile[i] = ( zeile[i]<thresholdPlusShift )? '0' : '1';
+                }
+            }
+            for (int i = 0; i< lengthOfSequence; i++) {
+                // init
+                numberOfCurrentZeros = 0;
+                for (int j = i; j < lengthOfSequence; j++) {
+                    if (zeile[j]=='0') { numberOfCurrentZeros++; }
+                    if (numberOfCurrentZeros <= preCompAllowedZeros[j-i+1] ) {
+                        c[i][j]++;
+                    }
+                }
+            }
+        }
+
+        // close file
+        in.close();
+
+        free(zeile);
+        return c;
+    }
+
+    // m-mean
+    int** trimIntegerMean(
+        const std::string& inputfile,
+        const int& numberOfSequences,
+        const int& lengthOfSequence,
+        const double& givenMean,
+        const int& shiftToConvertChars)
+    {
+        // c(i,j)=x means, there are x lines where a block of starting at index i
+        // and ending at index j with mean value at least "givenMean"
+        int** c = callocMatrix<int>(lengthOfSequence);
+
+        // read the file row by row
+        char* zeile = mallocVector<char>(lengthOfSequence+1);
+
+        int currentSum;
+        int currentWidth;
+        double currentMean;
+        int shiftedMean = shiftToConvertChars + givenMean;
+
+        // open file
+        std::ifstream in;
+        in.open(inputfile.c_str(), std::ios::in);
+
+        for (int z = 0; z < numberOfSequences; z++) {
+            in >> zeile; // skip 3 lines
+            in >> zeile; // skip 3 lines
+            in >> zeile; // skip 3 linee
+            in >> zeile;
+            for (int i = 0; i< lengthOfSequence; i++) {
+                // init diagonal value
+                currentSum = 0;
+                currentWidth = 0;
+                for (int j = i; j < lengthOfSequence; j++) {
+                    currentSum += zeile[j];
+                    currentWidth++;
+                    currentMean = ( (double) currentSum ) / ( (double) currentWidth );
+                    if ( currentMean >= shiftedMean ) { c[i][j]++; }
+                }
+            }
+        }
+
+        // close file
+        in.close();
+
+        free(zeile);
+        return c;
+    }
+
 }
+
