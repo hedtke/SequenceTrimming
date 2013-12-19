@@ -23,7 +23,7 @@ c++ -I. -O3 trimIntegerMean.cpp -o trimIntegerMean
 
 ## INPUT FORMAT
 If the input file is a FASTQ file, use the switch `--fastq` and give a shift for
-the ASCII-Char -> Integer tranformation. Use the threshold to say what qualities
+the ASCII-Char -> Integer transformation. Use the threshold to say what qualities
 are "good" and "bad": Let *t* be the threshold, *s* be the shift, *c* a char ASCII
 score and *I(c)* the ASCII index of *c*. We say that *c* is "bad" (a "0") if *I(c)-s<t*.
 Otherwise it is good ("1").
