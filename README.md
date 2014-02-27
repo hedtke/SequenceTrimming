@@ -1,6 +1,7 @@
 # Sequence Trimming Algorithms
-Ivo Grosse, Ivo Hedtke, Ioana Lemnian, Matthias Mueller-Hannemann.  
-*19 Dec 2013*.
+Ivo Hedtke, Ioana Lemnian, Matthias Mueller-Hannemann, Ivo Grosse.  
+*On Optimal Read Trimming in Next Generation Sequencing and Its Complexity*  
+**27 Feb 2014**.
 
 ## FILES
 | file(s)                            | description                         |
@@ -22,26 +23,19 @@ c++ -I. -O3 trimIntegerMean.cpp -o trimIntegerMean
 ```
 
 ## INPUT FORMAT
-If the input file is a FASTQ file, use the switch `--fastq` and give a shift for
-the ASCII-Char -> Integer transformation. Use the threshold to say what qualities
+The input is a FASTQ file with a shift for
+the ASCII-Char -> Integer transformation. A threshold is used to say what qualities
 are "good" and "bad": Let *t* be the threshold, *s* be the shift, *c* a char ASCII
 score and *I(c)* the ASCII index of *c*. We say that *c* is "bad" (a "0") if *I(c)-s<t*.
 Otherwise it is good ("1").
 
-If the input file consists only of the quality score lines of a FASTQ files do
-the same as above but do not use the `--fastq' switch.
-
-If neither of `--fastq`, `--shift` and `--threshold` is used, the input file is a 0/1
-ASCII grid.
-
 ## OUTPUT FORMAT
 If `--outfile` is used, the output file is an CSV format. It consists of the
 columns "left", "right" and "reads". For each pair *left* <= *right* the number of
-reads *g* in the grid is given such that *g*[*left*..*right*] doesn't contain a zero.
+reads *g* in the input file is given such that *g*[*left*..*right*] fulfills the desired row constraint of the problem (0-zeros, *z*-zeros, *p*-percent, *m*-mean).
 
 If `--outfile` is not used, the output on the screen lists the left border, the
-right border, the width, the number of selected reads and the area of the biggest
-1-block in the grid.
+right border, the width, the number of selected reads and the number of selected nucleotides.
 
 ## USAGE
 ### trimZeroOne
@@ -51,12 +45,8 @@ right border, the width, the number of selected reads and the area of the bigges
 | `--outfile`   | `-o`  | string | no       | file name of output file (CSV format), if skipped, only a short summary on screen is given |
 | `--reads`     | `-r`  | int    | yes      | number of reads in the input file                                                          |
 | `--length`    | `-l`  | int    | yes      | length of each read in the input file                                                      |
-| `--fastq`     | `-f`  |        | no       | is input file in FASTQ format?                                                             |
-| `--threshold` | `-t`  | int    | no\*     | quality scores less than the threshold are "bad", others are "good"                        |
-| `--shift`     | `-s`  | int    | no\*     | which ASCII index represents the "0" quality?                                              |
-
-\*: You can only use `--shift` and `--threshold` together. It is only allowed to use
-non of them or both. If `--fastq` is used, you have to use `--shift` and `–threshold`.
+| `--threshold` | `-t`  | int    | yes      | quality scores less than the threshold are "bad", others are "good"                        |
+| `--shift`     | `-s`  | int    | yes      | which ASCII index represents the "0" quality?                                              |
 
 ### trimZeroOneZerosAllowed
 | parameter     | short | type   | required | description                                                                                |
@@ -66,12 +56,8 @@ non of them or both. If `--fastq` is used, you have to use `--shift` and `–thr
 | `--reads`     | `-r`  | int    | yes      | number of reads in the input file                                                          |
 | `--length`    | `-l`  | int    | yes      | length of each read in the input file                                                      |
 | `--zeros`     | `-z`  | int    | yes      | number of allowed zeros per read                                                           |
-| `--fastq`     | `-f`  |        | no       | is input file in FASTQ format?                                                             |
-| `--threshold` | `-t`  | int    | no\*     | quality scores less than the threshold are "bad", others are "good"                        |
-| `--shift`     | `-s`  | int    | no\*     | which ASCII index represents the "0" quality?                                              |
-
-\*: You can only use `--shift` and `--threshold` together. It is only allowed to use
-non of them or both. If `--fastq` is used, you have to use `--shift` and `–threshold`.
+| `--threshold` | `-t`  | int    | yes      | quality scores less than the threshold are "bad", others are "good"                        |
+| `--shift`     | `-s`  | int    | yes      | which ASCII index represents the "0" quality?                                              |
 
 ### trimZeroOnePercentZerosAllowed
 | parameter     | short | type   | required | description                                                                                |
@@ -81,12 +67,9 @@ non of them or both. If `--fastq` is used, you have to use `--shift` and `–thr
 | `--reads`     | `-r`  | int    | yes      | number of reads in the input file                                                          |
 | `--length`    | `-l`  | int    | yes      | length of each read in the input file                                                      |
 | `--percent`   | `-p`  | double | yes      | percent of allowed zeros per read: value between 0.0 and 1.0                               |
-| `--fastq`     | `-f`  |        | no       | is input file in FASTQ format?                                                             |
-| `--threshold` | `-t`  | int    | no\*     | quality scores less than the threshold are "bad", others are "good"                        |
-| `--shift`     | `-s`  | int    | no\*     | which ASCII index represents the "0" quality?                                              |
+| `--threshold` | `-t`  | int    | yes      | quality scores less than the threshold are "bad", others are "good"                        |
+| `--shift`     | `-s`  | int    | yes      | which ASCII index represents the "0" quality?                                              |
 
-\*: You can only use `--shift` and `--threshold` together. It is only allowed to use
-non of them or both. If `--fastq` is used, you have to use `--shift` and `–threshold`.
 
 ### trimIntegerMean
 | parameter     | short | type   | required | description                                                                                |

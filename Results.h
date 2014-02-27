@@ -1,27 +1,52 @@
+/*******************************************************************************
+ *
+ * Results.h
+ *
+ * DESCRIPTION: Output routines. Given a matrix c with the number c(l,r) of
+ *              reads that fulfill 0-zeros, z-zeros, p-percent or m-mean
+ *              starting at column l and ending at column r.
+ *              exportMatrix: exports the matrix c as CSV with the rows
+ *                            "l, r, c(l,r)"
+ *              printMaxArea: computes l',r':=argmax{ c(l,r)*(r-l+1) } and
+ *                            returns c(l',r')*(r'-l'+1),
+ *                                    r'-l'+1,
+ *                                    c(l',r'),
+ *                                    l',
+ *                                    r'
+ *                            on screen
+ *
+ * RUNTIMES: O(n^2) if the input matrix is of type (n x n).
+ *
+ * AUTHORS: Ivo Hedtke (ivo.hedtke@uni-osnabrueck.de)
+ *          Matthias Mueller-Hannemann (muellerh@informatik.uni-halle.de)
+ *
+ * LAST CHANGE: 27 Feb 2014
+ *
+ */
+
+
+using namespace std;
+
 namespace Results {
-
-    void exportResultMatrixAsCSV(int** c, int length, std::string outfile) {
-        std::ofstream out;
-        out.open(outfile.c_str(), std::ios::out);
-
-        out << "left; right; rows;" << std::endl;
-        for ( int i = 0; i < length; i++ ) {
-            for ( int j = i; j < length; j++ ) {
-                out << i << "; " << j << "; " << c[i][j] << ";" << std::endl;
+    
+    void exportMatrix(vector<vector<int> > c, string outfile) {
+        ofstream out(outfile, ios::out);
+        for ( int i = 0; i < c.size(); i++ ) {
+            for ( int j = 0; j < c[i].size(); j++ ) {
+                out << c[i][j] << ", ";
             }
+            out << endl;
         }
-
-        out.close();
     }
 
-    void printMaxArea(int** c, int length, int rows) {
+    void printMaxArea(vector<vector<int> > c, int rows) {
         long long int maxvalue = 0;
         long long int value;
         int indexL = -1;
         int indexR = -1;
-        for (int i = 0; i < length; i++) {
-            for (int j = i; j < length; j++) {
-                value = (j-i+1) * c[i][j];
+        for (int i = 0; i < c.size(); i++) {
+            for (int j = i; j < c[i].size(); j++) {
+                value = ((long long int) (j-i+1)) *((long long int) c[i][j]);
                 if (value > maxvalue){
                     maxvalue = value;
                     indexL = i;
@@ -30,11 +55,11 @@ namespace Results {
             }
         }
         int width = indexR - indexL + 1;
-        std::cout << "area:  " << maxvalue << std::endl;
-        std::cout << "width: " << width << " (" << (width*100.0)/((float) length) << "%)" << std::endl;
-        std::cout << "rows:  " << c[indexL][indexR] << " (" << (c[indexL][indexR]*100.0)/((float) rows) << "%)" << std::endl;
-        std::cout << "left:  " << indexL << std::endl;
-        std::cout << "right: " << indexR << std::endl;
+        cout << "area:  " << maxvalue << endl;
+        cout << "width: " << width << " (" << (width*100.0)/((float) c.size()) << "%)" << endl;
+        cout << "rows:  " << c[indexL][indexR] << " (" << (c[indexL][indexR]*100.0)/((float) rows) << "%)" << endl;
+        cout << "left:  " << indexL << endl;
+        cout << "right: " << indexR << endl;
     }
 
 }
