@@ -6,7 +6,7 @@
  *              reads that fulfill 0-zeros, z-zeros, p-percent or m-mean
  *              starting at column l and ending at column r.
  *              exportMatrix: exports the matrix c as CSV with the rows
- *                            "l, r, c(l,r)"
+ *                            "l; r; c(l,r)"
  *              printMaxArea: computes l',r':=argmax{ c(l,r)*(r-l+1) } and
  *                            returns c(l',r')*(r'-l'+1),
  *                                    r'-l'+1,
