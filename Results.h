@@ -20,7 +20,7 @@
  * AUTHORS: Ivo Hedtke (ivo.hedtke@uni-osnabrueck.de)
  *          Matthias Mueller-Hannemann (muellerh@informatik.uni-halle.de)
  *
- * LAST CHANGE: 27 Feb 2014
+ * LAST CHANGE: 28 Feb 2014
  *
  */
 
@@ -33,9 +33,8 @@ namespace Results {
         ofstream out(outfile, ios::out);
         for ( int i = 0; i < c.size(); i++ ) {
             for ( int j = 0; j < c[i].size(); j++ ) {
-                out << c[i][j] << ", ";
+                out << i << "; " << j << "; " c[i][j] << endl;
             }
-            out << endl;
         }
     }
 
