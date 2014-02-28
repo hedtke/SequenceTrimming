@@ -33,7 +33,7 @@ namespace Results {
         ofstream out(outfile, ios::out);
         for ( int i = 0; i < c.size(); i++ ) {
             for ( int j = 0; j < c[i].size(); j++ ) {
-                out << i << "; " << j << "; " c[i][j] << endl;
+                out << i << "; " << j << "; " << c[i][j] << endl;
             }
         }
     }
