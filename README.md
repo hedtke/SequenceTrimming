@@ -16,10 +16,10 @@ Ivo Hedtke, Ioana Lemnian, Matthias Mueller-Hannemann, Ivo Grosse.
 
 ## COMPILE
 ```
-c++ -I. -O3 trimZeroOne.cpp -o trimZeroOne
-c++ -I. -O3 trimZeroOneZerosAllowed.cpp -o trimZeroOneZerosAllowed
-c++ -I. -O3 trimZeroOnePercentZerosAllowed.cpp -o trimZeroOnePercentZerosAllowed
-c++ -I. -O3 trimIntegerMean.cpp -o trimIntegerMean
+c++ -I. --std=c++11 -O3 trimZeroOne.cpp -o trimZeroOne
+c++ -I. --std=c++11 -O3 trimZeroOneZerosAllowed.cpp -o trimZeroOneZerosAllowed
+c++ -I. --std=c++11 -O3 trimZeroOnePercentZerosAllowed.cpp -o trimZeroOnePercentZerosAllowed
+c++ -I. --std=c++11 -O3 trimIntegerMean.cpp -o trimIntegerMean
 ```
 
 ## INPUT FORMAT
