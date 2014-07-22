@@ -79,5 +79,4 @@ right border, the width, the number of selected reads and the number of selected
 | `--reads`     | `-r`  | int    | yes      | number of reads in the input file                                                          |
 | `--length`    | `-l`  | int    | yes      | length of each read in the input file                                                      |
 | `--mean`      | `-m`  | double | yes      | min. mean per selected read                                                                |
-| `--threshold` | `-t`  | int    | yes      | quality scores less than the threshold are "bad", others are "good"                        |
 | `--shift`     | `-s`  | int    | yes      | which ASCII index represents the "0" quality?                                              |
