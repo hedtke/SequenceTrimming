@@ -19,7 +19,7 @@
  *
  * CREATED: 13 Dec 2013
  *
- * LAST CHANGE: 27 Feb 2014
+ * LAST CHANGE: 22 Jul 2014
  *
  */
 
@@ -70,10 +70,10 @@ namespace ComputeMatrices {
             // ASSERT: ASCII("!")=33 and this is the smallest possible char in a quality score string
             // we need a dummy "bad" quality score at the end for our algorithm
             for (int i = 0; i <= lengthOfSequence; i++) {
-                if (zeile.at(i) < thresholdPlusShift) {
+                if (zeile[i] < thresholdPlusShift) {
                     if (stillInOneBlock) {
                         stillInOneBlock = false;
-                        cT.at(startOfOneBlock).at(i-1)++;
+                        cT[startOfOneBlock][i-1]++;
                     }
                 } else {
                     if (!stillInOneBlock) {
@@ -87,20 +87,20 @@ namespace ComputeMatrices {
         // compute c from cT
         vector<int> columnSumAbove (lengthOfSequence,0);
         // first fill the last column of c
-        c.at(0).at(lengthOfSequence-1) = cT.at(0).at(lengthOfSequence-1);
+        c[0][lengthOfSequence-1] = cT[0][lengthOfSequence-1];
         for (int i=1; i < lengthOfSequence; i++){
-            c.at(i).at(lengthOfSequence-1) = cT.at(i).at(lengthOfSequence-1) + c.at(i-1).at(lengthOfSequence-1);
+            c[i][lengthOfSequence-1] = cT[i][lengthOfSequence-1] + c[i-1][lengthOfSequence-1];
         }
         // next fill the first row of c
         for (int j=lengthOfSequence-2; j>= 0; j--){
-            c.at(0).at(j) = cT.at(0).at(j) + c.at(0).at(j+1);
-            columnSumAbove.at(j) = cT.at(0).at(j);
+            c[0][j] = cT[0][j] + c[0][j+1];
+            columnSumAbove[j] = cT[0][j];
         }
         // now fill the rest
         for (int i=1; i < lengthOfSequence; i++){
             for (int j=lengthOfSequence-2; j>= i; j--){
-                c.at(i).at(j) = cT.at(i).at(j) + c.at(i).at(j+1) + columnSumAbove.at(j);
-                columnSumAbove.at(j) += cT.at(i).at(j);
+                c[i][j] = cT[i][j] + c[i][j+1] + columnSumAbove[j];
+                columnSumAbove[j] += cT[i][j];
             }
         }
 
@@ -158,18 +158,18 @@ namespace ComputeMatrices {
             getline(in,zeile);
             startOfOneBlock = 0;
             numberOfZerosInCurrentRow = 0;
-            stillInOneBlock = (zeile.at(0)>=thresholdPlusShift);
+            stillInOneBlock = (zeile[0]>=thresholdPlusShift);
             for (int i = 0; i < lengthOfSequence; i++) {
                 // initialize leftOne and rightOne
-                leftOne.at(i) = 0;
-                rightOne.at(i) = 0;
+                leftOne[i] = 0;
+                rightOne[i] = 0;
                 // store positions of Ones
-                if (zeile.at(i)<thresholdPlusShift) {
-                    positionsOfZeros.at(numberOfZerosInCurrentRow)=i;
+                if (zeile[i]<thresholdPlusShift) {
+                    positionsOfZeros[numberOfZerosInCurrentRow]=i;
                     numberOfZerosInCurrentRow++;
                 }
                 // fill leftOne
-                if (zeile.at(i)<thresholdPlusShift) {
+                if (zeile[i]<thresholdPlusShift) {
                     if (stillInOneBlock) {
                         stillInOneBlock = false;
                     }
@@ -178,16 +178,16 @@ namespace ComputeMatrices {
                         stillInOneBlock = true;
                         startOfOneBlock = i;
                     }
-                    leftOne.at(i)=startOfOneBlock;
+                    leftOne[i]=startOfOneBlock;
                 }
             }
             // fill rightOne
-            stillInOneBlock = (zeile.at(lengthOfSequence-1)>=thresholdPlusShift);
+            stillInOneBlock = (zeile[lengthOfSequence-1]>=thresholdPlusShift);
             if (stillInOneBlock) {
                 startOfOneBlock = lengthOfSequence-1;
             }
             for (int i = lengthOfSequence-1; i >=0; i--) {
-                if (zeile.at(i)<thresholdPlusShift) {
+                if (zeile[i]<thresholdPlusShift) {
                     if (stillInOneBlock) {
                         stillInOneBlock = false;
                     }
@@ -196,29 +196,29 @@ namespace ComputeMatrices {
                         stillInOneBlock = true;
                         startOfOneBlock = i;
                     }
-                    rightOne.at(i)=startOfOneBlock;
+                    rightOne[i]=startOfOneBlock;
                 }
             }
 
             if (numberOfZerosInCurrentRow <= numberOfAllowedZerosPerSequence) {
                 for (int j=0; j < lengthOfSequence; j++)
-                    cC.at(0).at(j)++;
+                    cC[0][j]++;
             } else {
                 int previousBlock = -1;
                 for (int i = 0; i <= numberOfZerosInCurrentRow-numberOfAllowedZerosPerSequence; i++) {
-                    leftBorderZero = positionsOfZeros.at(i);
-                    rightBorderZero = positionsOfZeros.at(i+numberOfAllowedZerosPerSequence-1);
+                    leftBorderZero = positionsOfZeros[i];
+                    rightBorderZero = positionsOfZeros[i+numberOfAllowedZerosPerSequence-1];
                     // leftBorderOneBlock is either
                     // 1) = 0, if leftBorderZero == 0
                     // 2) = leftBorderZero, if leftBorderZero-1 is *not* part of a
                     //                      1-block in zeile
-                    // 3) = leftOne.at(leftBorderZero-1), if leftBorderZero-1 is part
+                    // 3) = leftOne[leftBorderZero-1], if leftBorderZero-1 is part
                     //                                 of a 1-block in zeile
                     if ( leftBorderZero == 0 ) {
                         leftBorderOneBlock = 0;
                     } else { // leftBorderZero > 0
-                        if (zeile.at(leftBorderZero-1)>=thresholdPlusShift) { // 1-block left of 0
-                            leftBorderOneBlock = leftOne.at(leftBorderZero-1);
+                        if (zeile[leftBorderZero-1]>=thresholdPlusShift) { // 1-block left of 0
+                            leftBorderOneBlock = leftOne[leftBorderZero-1];
                         } else { // no 1-block
                             leftBorderOneBlock = leftBorderZero;
                         }
@@ -227,15 +227,15 @@ namespace ComputeMatrices {
                     if (rightBorderZero == lengthOfSequence-1) {
                         rightBorderOneBlock = lengthOfSequence-1;
                     } else {
-                        if (zeile.at(rightBorderZero+1)>=thresholdPlusShift) { // 1-block right of 0
-                            rightBorderOneBlock = rightOne.at(rightBorderZero+1);
+                        if (zeile[rightBorderZero+1]>=thresholdPlusShift) { // 1-block right of 0
+                            rightBorderOneBlock = rightOne[rightBorderZero+1];
                         } else { // no 1-block
                             rightBorderOneBlock = rightBorderZero;
                         }
                     }
                     // add to cC
                     for (int j= previousBlock+1; j <=rightBorderOneBlock; j++) {
-                        cC.at(leftBorderOneBlock).at(j)++;
+                        cC[leftBorderOneBlock][j]++;
                     }
                     previousBlock = rightBorderOneBlock;
                 }
@@ -245,12 +245,12 @@ namespace ComputeMatrices {
         // compute c from cC
         // first fill the first row of c
         for (int j=0; j< lengthOfSequence; j++){
-            c.at(0).at(j) = cC.at(0).at(j);
+            c[0][j] = cC[0][j];
         }
         // now fill the rest
         for (int i=1; i < lengthOfSequence; i++){
             for (int j=i; j<lengthOfSequence; j++){
-                c.at(i).at(j) = cC.at(i).at(j) + c.at(i-1).at(j);
+                c[i][j] = cC[i][j] + c[i-1][j];
             }
         }
 
@@ -278,7 +278,7 @@ namespace ComputeMatrices {
         // pre compute allowed zeros per width for given percent
         vector<int> preCompAllowedZeros (lengthOfSequence+1);
         for (int i = 0; i <= lengthOfSequence; i++) {
-            preCompAllowedZeros.at(i) = (int) (percentOfAllowedZerosPerSequence * i);
+            preCompAllowedZeros[i] = (int) (percentOfAllowedZerosPerSequence * i);
         }
 
         // row-block is feasible if numberOfCurrentZeros/(j-i+1) <= percentOfAllowedZerosPerSequence
@@ -299,9 +299,9 @@ namespace ComputeMatrices {
                 width = 0;
                 for (int j = i; j < lengthOfSequence; j++) {
                     width++;
-                    if (zeile.at(j)<thresholdPlusShift) { numberOfCurrentZeros++; }
-                    if (numberOfCurrentZeros <= preCompAllowedZeros.at(width) ) {
-                        c.at(i).at(j)++;
+                    if (zeile[j]<thresholdPlusShift) { numberOfCurrentZeros++; }
+                    if (numberOfCurrentZeros <= preCompAllowedZeros[width] ) {
+                        c[i][j]++;
                     }
                 }
             }
@@ -326,10 +326,9 @@ namespace ComputeMatrices {
         string zeile;
 
         int currentSum;
-        int currentWidth;
-        double currentMean;
         double shiftedMean = shiftToConvertChars + givenMean;
-
+        double currentCumulatedMean;
+        
         // open file
         ifstream in(inputfile, ios::in);
 
@@ -341,12 +340,11 @@ namespace ComputeMatrices {
             for (int i = 0; i< lengthOfSequence; i++) {
                 // init diagonal value
                 currentSum = 0;
-                currentWidth = 0;
+                currentCumulatedMean = 0.0;
                 for (int j = i; j < lengthOfSequence; j++) {
-                    currentSum += zeile.at(j);
-                    currentWidth++;
-                    currentMean = ( (double) currentSum ) / ( (double) currentWidth );
-                    if ( currentMean >= shiftedMean ) { c.at(i).at(j)++; }
+                    currentSum += zeile[j];
+                    currentCumulatedMean += shiftedMean;
+                    if ( currentSum >= currentCumulatedMean ) { c[i][j]++; }
                 }
             }
         }
