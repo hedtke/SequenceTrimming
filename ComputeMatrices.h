@@ -26,6 +26,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <utility>
 
 using namespace std;
 
@@ -349,6 +350,128 @@ namespace ComputeMatrices {
             }
         }
 
+        return c;
+    }
+    
+    vector<vector<int>> trimIntegerMeanNew(const string& inputfile,
+                                           const int&    numberOfSequences,
+                                           const int&    lengthOfSequence,
+                                           const double& givenMean,
+                                           const int&    shiftToConvertChars)
+    {
+        // c(i,j)=x means, there are x lines where a block of starting at index i
+        // and ending at index j with mean value at least "givenMean"
+        vector<vector<int>> c (lengthOfSequence, vector<int>(lengthOfSequence,0));
+        vector<vector<int>> cT (lengthOfSequence, vector<int>(lengthOfSequence,0));
+        
+        double shiftedMean = shiftToConvertChars + givenMean;
+        
+        // read the file row by row
+        string zeile;
+        // open file
+        ifstream in(inputfile, ios::in);
+        
+        for (int z = 0; z < numberOfSequences; z++) {
+            getline(in,zeile); // skip 3 lines
+            getline(in,zeile); // skip 3 lines
+            getline(in,zeile); // skip 3 lines
+            getline(in,zeile);
+            
+            // pre processing to access the mean in O(1)
+            vector<int> partialSums(lengthOfSequence+1, 0);
+            partialSums[0] = 0;
+            for (int i = 0; i < lengthOfSequence; i++) {
+                partialSums[i+1] = (zeile[i] - shiftedMean) + partialSums[i];
+            }
+            
+            // find block with values >= mean, because all subblocks fulfill the
+            // m-mean condition
+            vector<pair<int,int>> oneBlocks;
+            int startOfOneBlock = 0;
+            bool stillInOneBlock = false;
+            zeile.append("!"); // dummy 0 at the end
+            // ASSERT: ASCII("!")=33 and this is the smallest possible char in a quality score string
+            // we need a dummy "bad" quality score at the end for our algorithm
+            for (int i = 0; i <= lengthOfSequence; i++) {
+                if (zeile[i] < shiftedMean) {
+                    if (stillInOneBlock) {
+                        stillInOneBlock = false;
+                        oneBlocks.push_back( make_pair(startOfOneBlock,i-1) );
+                        cT[startOfOneBlock][i-1]++;
+                    }
+                } else {
+                    if (!stillInOneBlock) {
+                        stillInOneBlock = true;
+                        startOfOneBlock = i;
+                    }
+                }
+            }
+            
+            // remember that we added "!" to zeile, but we will not read it later,
+            // so there is no need to delete it
+            
+            // compute c(l,r) for all (l,r) not in the triangles of oneBlocks
+            // HORIZONTAL
+            int startrow = 0;
+            for (auto p: oneBlocks) {
+                for (int row = startrow; row < p.first; row++) {
+                    for (int col = row+1; col < lengthOfSequence; col++) {
+                        if ( (partialSums[col+1] - partialSums[row]) >= 0) {
+                            c[row][col]++;
+                        }
+                    }
+                }
+                startrow = p.second + 1;
+                // VERTICAL: everything right of the triangle induced by p
+                for (int row = p.first; row <= p.second; row++) {
+                    for (int col = p.second+1; col < lengthOfSequence; col++) {
+                        if ( (partialSums[col+1] - partialSums[row]) >= 0) {
+                            c[row][col]++;
+                        }
+                    }
+                }
+            }
+            // everything aver last triangle of 1s
+            for (int row = startrow; row < lengthOfSequence; row++) {
+                for (int col = row+1; col < lengthOfSequence; col++) {
+                    if ( (partialSums[col+1] - partialSums[row]) >= 0) {
+                        c[row][col]++;
+                    }
+                }
+            }
+            
+        }
+        
+        // compute c_aux from cT like in 0-zeros:
+        vector<vector<int>> c_aux (lengthOfSequence, vector<int>(lengthOfSequence,0));
+        vector<int> columnSumAbove (lengthOfSequence,0);
+        // first fill the last column of c
+        c_aux[0][lengthOfSequence-1] = cT[0][lengthOfSequence-1];
+        for (int i=1; i < lengthOfSequence; i++){
+            c_aux[i][lengthOfSequence-1] = cT[i][lengthOfSequence-1] + c_aux[i-1][lengthOfSequence-1];
+        }
+        // next fill the first row of c
+        for (int j=lengthOfSequence-2; j>= 0; j--){
+            c_aux[0][j] = cT[0][j] + c_aux[0][j+1];
+            columnSumAbove[j] = cT[0][j];
+        }
+        // now fill the rest
+        for (int i=1; i < lengthOfSequence; i++){
+            for (int j=lengthOfSequence-2; j>= i; j--){
+                c_aux[i][j] = cT[i][j] + c_aux[i][j+1] + columnSumAbove[j];
+                columnSumAbove[j] += cT[i][j];
+            }
+        }
+        
+        // add c and c_aux
+        
+        for (int i = 0; i < lengthOfSequence; i++) {
+            for (int j = i; j < lengthOfSequence; j++) {
+                c[i][j] += c_aux[i][j];
+            }
+        }
+        
+        
         return c;
     }
 
