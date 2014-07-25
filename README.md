@@ -1,7 +1,9 @@
 # Sequence Trimming Algorithms
 Ivo Hedtke, Ioana Lemnian, Matthias Mueller-Hannemann, Ivo Grosse.  
 *On Optimal Read Trimming in Next Generation Sequencing and Its Complexity*  
-**27 Feb 2014**.
+**25 Jul 2014**.
+
+**Version 1.1:** Speed-Ups for trimZeroOnePercentZerosAllowed and trimIntegerMean (expected runtime is now linear). Worst-case runtime remains quadratic.
 
 ## FILES
 | file(s)                            | description                         |
@@ -15,12 +17,7 @@ Ivo Hedtke, Ioana Lemnian, Matthias Mueller-Hannemann, Ivo Grosse.
 | trimIntegerMean.cpp                | Problem *m*-mean                    |
 
 ## COMPILE
-```
-c++ -I. --std=c++11 -O3 trimZeroOne.cpp -o trimZeroOne
-c++ -I. --std=c++11 -O3 trimZeroOneZerosAllowed.cpp -o trimZeroOneZerosAllowed
-c++ -I. --std=c++11 -O3 trimZeroOnePercentZerosAllowed.cpp -o trimZeroOnePercentZerosAllowed
-c++ -I. --std=c++11 -O3 trimIntegerMean.cpp -o trimIntegerMean
-```
+`make` or `make CXX=g++-4.8`
 
 ## INPUT FORMAT
 The input is a FASTQ file with a shift for
