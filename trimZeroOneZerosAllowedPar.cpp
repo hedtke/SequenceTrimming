@@ -22,7 +22,7 @@
  *
  * CREATED: 21 Feb 2013
  *
- * LAST CHANGE: 28 Jul 2014
+ * LAST CHANGE: 29 Jul 2014
  *
  */
 
@@ -37,72 +37,59 @@ using namespace ComputeMatrices; // trimming algorithms
 using namespace Results;         // output on screen or in CSV
 
 int main(int argc, char * argv[]) {
-
+    
+    //START: processing command line options
+    int numberOfSequences, lengthOfSequence, numberOfAllowedZerosPerSequence, threshold, shift, numThreads;
+    string inputFile, outputFile;
+    
     try{
-
+        
         // read command line parameters
-        CmdLine cmd("trim with z allowed low quality nucleotides per row", ' ', "1.0", true);
-        ValueArg<int>    rowsArg(     "r", "reads",     "number of reads",                             true,  0,  "integer", cmd);
-        ValueArg<int>    lengthArg(   "l", "length",    "length of each read",                         true,  0,  "integer", cmd);
-        ValueArg<int>    zerosArg(    "z", "zeros",     "number of allowed zeros per read",            true,  0,  "integer", cmd);
-        ValueArg<string> infileArg (  "i", "infile",    "input file name",                             true,  "", "string",  cmd);
-        ValueArg<string> outfileArg(  "o", "outfile",   "output file name (CSV format)",               false, "", "string",  cmd);
-        ValueArg<int>    thresholdArg("t", "threshold", "quality is ok if quality score >= threshold", true,  -1, "integer", cmd);
-        ValueArg<int>    shiftArg(    "s", "shift",     "shift for char -> quality conversion",        true,  -1, "integer", cmd);
-        ValueArg<int>    numThreadsArg(  "p", "pthreads",   "number of worker threads", true,  1,  "integer", cmd);
+        CmdLine cmd("trim with z allowed low quality nucleotides per row", ' ', "1.2", true);
+        ValueArg<int>    rowsArg(      "r", "reads",       "number of reads",                             true,  0,  "integer", cmd);
+        ValueArg<int>    lengthArg(    "l", "length",      "length of each read",                         true,  0,  "integer", cmd);
+        ValueArg<int>    zerosArg(     "z", "zeros",       "number of allowed zeros per read",            true,  0,  "integer", cmd);
+        ValueArg<string> infileArg (   "i", "infile",      "input file name",                             true,  "", "string",  cmd);
+        ValueArg<string> outfileArg(   "o", "outfile",     "output file name (CSV format)",               false, "", "string",  cmd);
+        ValueArg<int>    thresholdArg( "t", "threshold",   "quality is ok if quality score >= threshold", true,  -1, "integer", cmd);
+        ValueArg<int>    shiftArg(     "s", "shift",       "shift for char -> quality conversion",        true,  -1, "integer", cmd);
+        ValueArg<int>    numThreadsArg("w", "workthreads", "number of parallel worker threads",           false,  0, "integer", cmd);
         
         cmd.parse( argc, argv );
-        int    numberOfSequences               = rowsArg.getValue();
-        int    lengthOfSequence                = lengthArg.getValue();
-        int    numberOfAllowedZerosPerSequence = zerosArg.getValue();
-        string inputFile                       = infileArg.getValue();
-        string outputFile                      = outfileArg.getValue();
-        int    threshold                       = thresholdArg.getValue();
-        int    shift                           = shiftArg.getValue();
-        int    numThreads                      = numThreadsArg.getValue();
-
-        
-        // compute matrix c_z for z-zeros
-
-        // sequential mode
-        if (numThreads <= 0){
-            vector<vector<int> > c = trimZeroOneZerosAllowed(inputFile,
-                                                             numberOfSequences,
-                                                             lengthOfSequence,
-                                                             numberOfAllowedZerosPerSequence,
-                                                             threshold,
-                                                             shift);
-
-            // output in CSV or on terminal
-            if (outfileArg.isSet()) {
-                exportMatrix(c,outputFile);
-            } else {
-                printMaxArea(c, numberOfSequences);
-            }
-        }
-        else  {   // parallel mode
-            vector<vector<int> > c = trimZeroOneZerosAllowedPar(inputFile,
-                                                                numberOfSequences,
-                                                                lengthOfSequence,
-                                                                numberOfAllowedZerosPerSequence,
-                                                                threshold,
-                                                                shift,
-                                                                numThreads);
-            
-            // output in CSV or on terminal
-            if (outfileArg.isSet()) {
-                exportMatrix(c,outputFile);
-            } else {
-                printMaxArea(c, numberOfSequences);
-            }
-            
-            
-        }
+        numberOfSequences               = rowsArg.getValue();
+        lengthOfSequence                = lengthArg.getValue();
+        numberOfAllowedZerosPerSequence = zerosArg.getValue();
+        inputFile                       = infileArg.getValue();
+        outputFile                      = outfileArg.getValue();
+        threshold                       = thresholdArg.getValue();
+        shift                           = shiftArg.getValue();
+        numThreads                      = numThreadsArg.getValue();
         
     } catch (ArgException &e) {
-        cerr << "ERROR: " << e.error() << " for arg " << e.argId() << endl;
+        cerr << "ARGUMENT ERROR: " << e.error() << " for arg " << e.argId() << endl;
     }
-
+    //END: processing command line options
+    
+    //START: now compute optimal trimming parameters
+    vector<vector<int>> c; // compute matrix c_z for z-zeros
+    if (numThreads == 0){// sequential mode
+        c = trimZeroOneZerosAllowed(inputFile,numberOfSequences,lengthOfSequence,
+                                    numberOfAllowedZerosPerSequence,threshold,shift);
+    } else  {// parallel mode
+        c = trimZeroOneZerosAllowedPar(inputFile,numberOfSequences,lengthOfSequence,
+                                       numberOfAllowedZerosPerSequence,threshold,
+                                       shift,numThreads);
+    }
+    //END: now compute optimal trimming parameters
+    
+    //START: output in CSV or on terminal
+    if (outputFile != "") {
+        exportMatrix(c,outputFile);
+    } else {
+        printMaxArea(c, numberOfSequences);
+    }
+    //END: output in CSV or on terminal
+    
     return EXIT_SUCCESS;
-
+    
 }
