@@ -1,6 +1,6 @@
 CPPFLAGS = --std=c++11 -O3 -I.
 
-OBJ = trimZeroOne trimZeroOnePercentZerosAllowed trimIntegerMean trimZeroOneZerosAllowedPar trimZeroOnePercentZerosAllowedPar trimIntegerMeanPar
+OBJ = trimZeroOne trimZeroOnePercentZerosAllowed trimIntegerMean trimZeroOneZerosAllowed trimZeroOnePercentZerosAllowedPar trimIntegerMeanPar
 
 all: $(OBJ)
 
