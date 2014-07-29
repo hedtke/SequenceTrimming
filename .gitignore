@@ -3,3 +3,9 @@
 /trimZeroOnePercentZerosAllowed
 /trimZeroOneZerosAllowed
 *.svn
+
+trimIntegerMeanPar
+
+trimZeroOnePercentZerosAllowedPar
+
+trimZeroOneZerosAllowedPar
