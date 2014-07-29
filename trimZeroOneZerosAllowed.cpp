@@ -26,10 +26,10 @@
  *
  */
 
-#include "tclap/CmdLine.h"   // command line arguments
-#include "ComputeMatrices.h" // trimming algorithms
+#include "tclap/CmdLine.h"           // command line arguments
+#include "ComputeMatrices.h"         // trimming algorithms
 #include "ComputeMatricesParallel.h" // parallel trimming algorithms
-#include "Results.h"         // output on screen or in CSV
+#include "Results.h"                 // output on screen or in CSV
 
 using namespace std;
 using namespace TCLAP;           // command line arguments
@@ -67,6 +67,7 @@ int main(int argc, char * argv[]) {
         
     } catch (ArgException &e) {
         cerr << "ARGUMENT ERROR: " << e.error() << " for arg " << e.argId() << endl;
+        return EXIT_FAILURE;
     }
     //END: processing command line options
     
