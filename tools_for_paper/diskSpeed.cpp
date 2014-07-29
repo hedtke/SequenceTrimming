@@ -38,7 +38,7 @@ int main(int argc, char * argv[]) {
         getline(in,zeile); // skip 3 lines
         getline(in,zeile); // skip 3 lines
         getline(in,zeile);
-        sum += zeile[0] + zeile[lengthOfSequence-1];
+        sum += zeile[lengthOfSequence-1];
     }
     
     cout << sum << endl;
