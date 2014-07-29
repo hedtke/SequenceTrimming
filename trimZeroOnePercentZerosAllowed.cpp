@@ -46,7 +46,7 @@ int main(int argc, char * argv[]) {
     try{
         
         // read command line parameters
-        CmdLine cmd("trim with p percent allowed low quality nucleotides per row", ' ', "1.0", true);
+        CmdLine cmd("trim with p percent allowed low quality nucleotides per row", ' ', "1.2", true);
         ValueArg<int>    rowsArg(      "r", "reads",       "number of reads",                                          true,  0,   "integer", cmd);
         ValueArg<int>    lengthArg(    "l", "length",      "length of each read",                                      true,  0,   "integer", cmd);
         ValueArg<double> percentArg(   "p", "percent",     "percent of allowed zeros per read: value between 0 and 1", true,  0.0, "double",  cmd);
@@ -67,7 +67,7 @@ int main(int argc, char * argv[]) {
         numThreads                       = numThreadsArg.getValue();
         
     } catch (ArgException &e) {
-        cerr << "ERROR: " << e.error() << " for arg " << e.argId() << endl;
+        cerr << "ARGUMENT ERROR: " << e.error() << " for arg " << e.argId() << endl;
         return EXIT_FAILURE;
     }
     //END: processing command line options
