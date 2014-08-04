@@ -31,14 +31,20 @@ int main(int argc, char * argv[]) {
     ifstream in(inputFile, ios::in);
     string zeile;
     
-    // do something very easy
+    // do something very easy with the file
     unsigned long long int sum = 0;
+    int row_sum;
     for (int z = 0; z < numberOfSequences; z++) {
         getline(in,zeile); // skip 3 lines
         getline(in,zeile); // skip 3 lines
         getline(in,zeile); // skip 3 lines
         getline(in,zeile);
-        sum += zeile[lengthOfSequence-1];
+        // do something very easy with the row
+        row_sum = 0;
+        for (int i=0; i<lengthOfSequence; i++) {
+            row_sum += zeile[i];
+        }
+        sum += (rowsum % 10);
     }
     
     cout << sum << endl;
