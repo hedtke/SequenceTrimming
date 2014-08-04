@@ -59,9 +59,9 @@ namespace ComputeMatrices {
         ifstream in(inputfile.c_str(), ios::in);
         
         for (int z = 0; z < numberOfSequences; z++) {
-            getline(in,zeile); // skip 3 lines
-            getline(in,zeile); // skip 3 lines
-            getline(in,zeile); // skip 3 lines
+            in.ignore(numeric_limits<streamsize>::max(), '\n'); // skip 3 lines
+            in.ignore(numeric_limits<streamsize>::max(), '\n'); // skip 3 lines
+            in.ignore(numeric_limits<streamsize>::max(), '\n'); // skip 3 lines
             getline(in,zeile);
             
             string* str = new string(zeile);

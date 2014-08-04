@@ -65,9 +65,9 @@ namespace ComputeMatrices {
         bool stillInOneBlock = false;
         int startOfOneBlock;
         for (int z = 0; z < numberOfSequences; z++) {
-            getline(in,zeile); // skip 3 lines
-            getline(in,zeile); // skip 3 lines
-            getline(in,zeile); // skip 3 lines
+            in.ignore(numeric_limits<streamsize>::max(), '\n'); // skip 3 lines
+            in.ignore(numeric_limits<streamsize>::max(), '\n'); // skip 3 lines
+            in.ignore(numeric_limits<streamsize>::max(), '\n'); // skip 3 lines
             getline(in,zeile);
             startOfOneBlock = 0;
             zeile.append("!"); // dummy 0 at the end
@@ -158,9 +158,9 @@ namespace ComputeMatrices {
         
         // loop over all lines of the file
         for (int z = 0; z < numberOfSequences; z++) {
-            getline(in,zeile); // skip 3 lines
-            getline(in,zeile); // skip 3 lines
-            getline(in,zeile); // skip 3 lines
+            in.ignore(numeric_limits<streamsize>::max(), '\n'); // skip 3 lines
+            in.ignore(numeric_limits<streamsize>::max(), '\n'); // skip 3 lines
+            in.ignore(numeric_limits<streamsize>::max(), '\n'); // skip 3 lines
             getline(in,zeile);
             startOfOneBlock = 0;
             numberOfZerosInCurrentRow = 0;
@@ -293,9 +293,9 @@ namespace ComputeMatrices {
         ifstream in(inputfile, ios::in);
         
         for (int z = 0; z < numberOfSequences; z++) {
-            getline(in,zeile); // skip 3 lines
-            getline(in,zeile); // skip 3 lines
-            getline(in,zeile); // skip 3 lines
+            in.ignore(numeric_limits<streamsize>::max(), '\n'); // skip 3 lines
+            in.ignore(numeric_limits<streamsize>::max(), '\n'); // skip 3 lines
+            in.ignore(numeric_limits<streamsize>::max(), '\n'); // skip 3 lines
             getline(in,zeile);
             // pre processing to access the #zeros in O(1)
             // #zeros in g[L..R] equals partialSums[R+1] - partialSums[L]
@@ -418,9 +418,9 @@ namespace ComputeMatrices {
         ifstream in(inputfile, ios::in);
         
         for (int z = 0; z < numberOfSequences; z++) {
-            getline(in,zeile); // skip 3 lines
-            getline(in,zeile); // skip 3 lines
-            getline(in,zeile); // skip 3 lines
+            in.ignore(numeric_limits<streamsize>::max(), '\n'); // skip 3 lines
+            in.ignore(numeric_limits<streamsize>::max(), '\n'); // skip 3 lines
+            in.ignore(numeric_limits<streamsize>::max(), '\n'); // skip 3 lines
             getline(in,zeile);
             
             // pre processing to access the mean in O(1)
