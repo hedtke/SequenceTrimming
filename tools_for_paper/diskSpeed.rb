@@ -14,11 +14,14 @@ for i in 1..5
     print 'sh -c "sync; echo 3 > /proc/sys/vm/drop_caches"'
     #system(sh -c "sync; echo 3 > /proc/sys/vm/drop_caches")
     files.each do |file|
-        mycmd = "time /home/hedtke/SequenceTrimming/tools_for_paper/diskSpeed "
-        mycmd += "-i /data/hedtke/" + file[:filename].to_s + ".fastq "
+        print "diskSpeed " + file[:filename].to_s + " run " + i.to_s + "\n"
+        mycmd = "bash -c 'time /home/hedtke/git/SequenceTrimming/tools_for_paper/diskSpeed "
+        mycmd += "-i /space/GrosseHedtkeLemnianMuellerHannemann/" + file[:filename].to_s + ".fastq "
         mycmd += "-l " + file[:length].to_s + " "
-        mycmd += "-r " + file[:reads].to_s + " "
-        mycmd += ">> /data/hedtke/diskSpeed_" + file[:filename].to_s + "_run_" + i.to_s + ".txt"
+        mycmd += "-r " + file[:reads].to_s + " > /dev/null 2>&1'"
         print mycmd + "\n"
+        #system(mycmd)
+        print "\n\n\n"
+        sleep 5
     end
 end
