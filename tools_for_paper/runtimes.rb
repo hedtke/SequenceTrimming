@@ -21,6 +21,7 @@ debug = true
 for i in 1..maxRepeats
     if !debug
         system(cacheCmd)
+        print "!!! leere Cache !!!"
         sleep 10
     end
     files.each do |file|
@@ -44,6 +45,7 @@ for i in 1..maxRepeats
     for t in [25,30]
         if !debug
             system(cacheCmd)
+            print "!!! leere Cache !!!"
             sleep 10
         end
         files.each do |file|
@@ -70,6 +72,7 @@ for i in 1..maxRepeats
     for t in [25,30]
         if !debug
             system(cacheCmd)
+            print "!!! leere Cache !!!"
             sleep 10
         end
         files.each do |file|
@@ -96,6 +99,7 @@ for i in 1..maxRepeats
     for t in [25,30]
         if !debug
             system(cacheCmd)
+            print "!!! leere Cache !!!"
             sleep 10
         end
         files.each do |file|
@@ -122,6 +126,7 @@ for i in 1..maxRepeats
     for m in [25,30,35]
         if !debug
             system(cacheCmd)
+            print "!!! leere Cache !!!"
             sleep 10
         end
         files.each do |file|
@@ -148,6 +153,7 @@ for i in 1..maxRepeats
     for w in [2,4,8]
         if !debug
             system(cacheCmd)
+            print "!!! leere Cache !!!"
             sleep 10
         end
         files.each do |file|
