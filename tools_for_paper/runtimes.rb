@@ -1,21 +1,28 @@
 files = Array.new
-#files.push({ :filename => "SRR505743", :reads => 225257463, :length => 101, :shift => 33 })
-#files.push({ :filename => "SRR505744", :reads => 244674787, :length => 101, :shift => 33 })
-#files.push({ :filename => "SRR505745", :reads => 226165495, :length => 101, :shift => 33 })
-#files.push({ :filename => "SRR505746", :reads => 252345156, :length => 101, :shift => 33 })
-files.push({ :filename => "SRR985867", :reads => 21129136, :length => 50, :shift => 33 })
-#files.push({ :filename => "SRR988190", :reads => 56746324, :length => 202, :shift => 33 })
-#files.push({ :filename => "SRR988193", :reads => 48330712, :length => 202, :shift => 33 })
-#files.push({ :filename => "SRR1029924", :reads => 87105048, :length => 50, :shift => 33 })
-#files.push({ :filename => "SRR1029925", :reads => 83487348, :length => 50, :shift => 33 })
-#files.push({ :filename => "SRR1030717", :reads => 87725913, :length => 97, :shift => 33 })
+files.push({ :filename => "SRR505743",    :reads => 225257463, :length => 101, :shift => 33 })
+files.push({ :filename => "SRR505744",    :reads => 244674787, :length => 101, :shift => 33 })
+files.push({ :filename => "SRR505745",    :reads => 226165495, :length => 101, :shift => 33 })
+files.push({ :filename => "SRR505746",    :reads => 252345156, :length => 101, :shift => 33 })
+files.push({ :filename => "SRR557711",    :reads => 36037705,  :length => 36,  :shift => 33 })
+files.push({ :filename => "SRR557723",    :reads => 37525647,  :length => 36,  :shift => 33 })
+files.push({ :filename => "SRR639080_1",  :reads => 16099716,  :length => 101, :shift => 33 })
+files.push({ :filename => "SRR985867",    :reads => 21129136,  :length => 50,  :shift => 33 })
+files.push({ :filename => "SRR988190",    :reads => 56746324,  :length => 202, :shift => 33 })
+files.push({ :filename => "SRR988193",    :reads => 48330712,  :length => 202, :shift => 33 })
+files.push({ :filename => "SRR1029924",   :reads => 87105048,  :length => 50,  :shift => 33 })
+files.push({ :filename => "SRR1029925",   :reads => 83487348,  :length => 50,  :shift => 33 })
+files.push({ :filename => "SRR1030717",   :reads => 87725913,  :length => 97,  :shift => 33 })
+files.push({ :filename => "SRR1163160_1", :reads => 82517320,  :length => 100, :shift => 33 })
+files.push({ :filename => "B1491_TAGCTT_L001_R1", :reads => 68679919, :length => 101, :shift => 33 })
+files.push({ :filename => "B1492_AGTTCC_L001_R1", :reads => 97358268, :length => 101, :shift => 33 })
+
 
 execPath = "/home/hedtke/git/SequenceTrimming/"
 dataPath = "/space/GrosseHedtkeLemnianMuellerHannemann/"
 timeCmd = "time -f 'total: %e \\t\\t user: %U' "
 cacheCmd = "sync; echo 3 > /proc/sys/vm/drop_caches"
-maxRepeats = 1
-debug = true
+maxRepeats = 3
+debug = false
 
 # DISK SPEED
 for i in 1..maxRepeats
