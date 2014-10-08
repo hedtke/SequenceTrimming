@@ -1,0 +1,11 @@
+/trimIntegerMean
+/trimZeroOne
+/trimZeroOnePercentZerosAllowed
+/trimZeroOneZerosAllowed
+*.svn
+
+trimIntegerMeanPar
+
+trimZeroOnePercentZerosAllowedPar
+
+trimZeroOneZerosAllowedPar
