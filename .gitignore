@@ -3,6 +3,7 @@
 /trimZeroOnePercentZerosAllowed
 /trimZeroOneZerosAllowed
 *.svn
+*.DS_Store
 
 trimIntegerMeanPar
 
